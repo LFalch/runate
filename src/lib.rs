@@ -2,6 +2,7 @@ use std::{collections::HashMap};
 
 mod younger;
 mod medieval;
+mod elder;
 
 #[derive(Debug, Clone, Eq, PartialEq)]
 pub struct YoungerFutharkReport {
@@ -72,6 +73,39 @@ impl MedievalRunesReport {
             .collect();
 
         MedievalRunesReport { transliteration, runes }
+    }
+}
+
+#[derive(Debug, Clone, Eq, PartialEq)]
+pub struct ElderFutharkReport {
+    pub transliteration: String,
+    pub runes: String,
+}
+
+impl ElderFutharkReport {
+    pub fn new(s: &str) -> Self {
+        let set = elder::rune_set();
+
+        let input = s
+            .chars()
+            .map(|c| {
+                if let Some(&c) = set.rune_to_trans.get(&c) {
+                    c
+                } else {
+                    c
+                }
+            });
+
+        let runes: String = input
+            .map(|c| *set.trans_to_rune.get(&c).unwrap_or(&c))
+            .collect();
+
+        let transliteration = runes
+            .chars()
+            .map(|c| *set.rune_to_trans.get(&c).unwrap_or(&c))
+            .collect();
+
+        ElderFutharkReport { transliteration, runes }
     }
 }
 
